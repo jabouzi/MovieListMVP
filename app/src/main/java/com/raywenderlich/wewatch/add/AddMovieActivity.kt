@@ -39,12 +39,12 @@ import android.widget.EditText
 import android.widget.ImageView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.raywenderlich.wewatch.BuildConfig
 import com.raywenderlich.wewatch.R
 import com.raywenderlich.wewatch.add.AddMovieContract.*
 
 import com.raywenderlich.wewatch.model.Movie
 import com.raywenderlich.wewatch.model.LocalDataSource
-import com.raywenderlich.wewatch.network.RetrofitClient.TMDB_IMAGEURL
 import com.raywenderlich.wewatch.search.SearchActivity
 import com.squareup.picasso.Picasso
 
@@ -95,7 +95,7 @@ open class AddMovieActivity : AppCompatActivity(), AddMovieViewInterface {
       titleEditText.setText(data?.getStringExtra(SearchActivity.EXTRA_TITLE))
       releaseDateEditText.setText(data?.getStringExtra(SearchActivity.EXTRA_RELEASE_DATE))
       movieImageView.tag = data?.getStringExtra(SearchActivity.EXTRA_POSTER_PATH)
-      Picasso.get().load(TMDB_IMAGEURL + data?.getStringExtra(SearchActivity.EXTRA_POSTER_PATH)).into(movieImageView)
+      Picasso.get().load(BuildConfig.TMDB_IMAGEURL + data?.getStringExtra(SearchActivity.EXTRA_POSTER_PATH)).into(movieImageView)
     }
   }
 

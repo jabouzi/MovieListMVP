@@ -30,6 +30,7 @@
 
 package com.raywenderlich.wewatch.main
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
@@ -38,10 +39,10 @@ import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
+import com.raywenderlich.wewatch.BuildConfig
 import com.raywenderlich.wewatch.R
 
 import com.raywenderlich.wewatch.model.Movie
-import com.raywenderlich.wewatch.network.RetrofitClient
 import com.squareup.picasso.Picasso
 
 import java.util.HashSet
@@ -55,13 +56,14 @@ class MainAdapter(internal var movieList: List<Movie>, internal var context: Con
     return MoviesHolder(v)
   }
 
+  @SuppressLint("NewApi")
   override fun onBindViewHolder(holder: MoviesHolder, position: Int) {
     holder.titleTextView.text = movieList[position].title
     holder.releaseDateTextView.text = movieList[position].releaseDate
     if (movieList[position].posterPath.equals("")) {
       holder.movieImageView.setImageDrawable(context.getDrawable(R.drawable.ic_local_movies_gray))
     } else {
-      Picasso.get().load(RetrofitClient.TMDB_IMAGEURL + movieList[position].posterPath).into(holder.movieImageView)
+      Picasso.get().load(BuildConfig.TMDB_IMAGEURL + movieList[position].posterPath).into(holder.movieImageView)
     }
   }
 

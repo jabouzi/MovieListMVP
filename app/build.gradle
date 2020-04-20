@@ -1,10 +1,15 @@
 apply plugin: 'com.android.application'
-
 apply plugin: 'kotlin-android'
-
 apply plugin: 'kotlin-android-extensions'
-
 apply plugin: 'kotlin-kapt'
+
+def getTmdbApiKey() {
+    if (System.getenv('TMDB_API_KEY') == null) {
+        return '"N/A"'
+    }
+    return System.getenv('TMDB_API_KEY');
+}
+
 
 android {
     compileSdkVersion 28
@@ -24,6 +29,19 @@ android {
     }
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = "1.8"
+    }
+
+
+    buildTypes {
+        debug {
+            buildConfigField 'String', 'API_KEY', "\"${getTmdbApiKey()}\""
+            buildConfigField 'String', 'TMDB_BASE_URL',  '"http://api.themoviedb.org/3/"'
+            buildConfigField 'String', 'TMDB_IMAGEURL',  '"https://image.tmdb.org/t/p/w500/"'
+        }
     }
 }
 

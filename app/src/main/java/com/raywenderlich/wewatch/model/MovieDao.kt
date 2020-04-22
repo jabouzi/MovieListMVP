@@ -40,16 +40,16 @@ import io.reactivex.Observable
 @Dao
 interface MovieDao {
 
-  @get:Query("SELECT * FROM movies_table")
+  @get:Query("SELECT * FROM movie")
   val all: Observable<List<Movie>>
 
   @Insert(onConflict = REPLACE)
   fun insert(movie: Movie)
 
-  @Query("DELETE FROM movies_table WHERE id = :id")
+  @Query("DELETE FROM movie WHERE id = :id")
   fun delete(id: Int?)
 
-  @Query("DELETE FROM movies_table")
+  @Query("DELETE FROM movie")
   fun deleteAll()
 
   @Update

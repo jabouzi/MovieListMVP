@@ -1,9 +1,11 @@
 package com.raywenderlich.wewatch.add
 
+import com.raywenderlich.wewatch.model.Movie
+
 class AddMovieContract {
 
     interface AddMoviePresenterInterface {
-        fun addMovie(title: String, releaseDate: String, posterPath: String)
+        fun addMovie(movie: Movie)
     }
 
     interface AddMovieViewInterface {

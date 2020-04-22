@@ -125,9 +125,7 @@ class SearchActivity : AppCompatActivity(), SearchActivityInterface {
   companion object {
 
     val SEARCH_QUERY = "searchQuery"
-    val EXTRA_TITLE = "SearchActivity.TITLE_REPLY"
-    val EXTRA_RELEASE_DATE = "SearchActivity.RELEASE_DATE_REPLY"
-    val EXTRA_POSTER_PATH = "SearchActivity.POSTER_PATH_REPLY"
+    val EXTRA_MOVIE = "SearchActivity.TITLE_REPLY"
   }
 
   /**
@@ -138,9 +136,7 @@ class SearchActivity : AppCompatActivity(), SearchActivityInterface {
       val movie = adapter.getItemAtPosition(position)
 
       val replyIntent = Intent()
-      replyIntent.putExtra(EXTRA_TITLE, movie.title)
-      replyIntent.putExtra(EXTRA_RELEASE_DATE, movie.releaseDate)
-      replyIntent.putExtra(EXTRA_POSTER_PATH, movie.posterPath)
+      replyIntent.putExtra(EXTRA_MOVIE, movie)
       setResult(Activity.RESULT_OK, replyIntent)
 
       finish()

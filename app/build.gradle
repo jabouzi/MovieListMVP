@@ -26,6 +26,12 @@ android {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+        debug {
+            buildConfigField 'String', 'API_KEY', "\"${getTmdbApiKey()}\""
+            buildConfigField 'String', 'TMDB_BASE_URL',  '"http://api.themoviedb.org/3/"'
+            buildConfigField 'String', 'TMDB_IMAGEURL',  '"https://image.tmdb.org/t/p/w500/"'
+        }
+
     }
     compileOptions {
         targetCompatibility JavaVersion.VERSION_1_8
@@ -33,15 +39,6 @@ android {
 
     kotlinOptions {
         jvmTarget = "1.8"
-    }
-
-
-    buildTypes {
-        debug {
-            buildConfigField 'String', 'API_KEY', "\"${getTmdbApiKey()}\""
-            buildConfigField 'String', 'TMDB_BASE_URL',  '"http://api.themoviedb.org/3/"'
-            buildConfigField 'String', 'TMDB_IMAGEURL',  '"https://image.tmdb.org/t/p/w500/"'
-        }
     }
 }
 
@@ -80,9 +77,14 @@ dependencies {
     implementation 'com.squareup.retrofit2:retrofit:2.1.0'
     implementation 'com.squareup.retrofit2:converter-gson:2.1.0'
     implementation 'com.squareup.retrofit2:adapter-rxjava2:2+'
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.6.0'
     //Picasso
     implementation 'com.squareup.picasso:picasso:2.71828'
     implementation 'com.google.android.material:material:1.0.0-rc01'
+
+    def anko_version = '0.10.1'
+    implementation "org.jetbrains.anko:anko:$anko_version"
+    implementation "org.jetbrains.anko:anko-commons:$anko_version"
 
 
 }

@@ -31,6 +31,11 @@
                   android:label="Search Results">
         </activity>
 
+        <activity
+            android:name=".details.MovieDetailsActivity"
+            android:label="WeWatch"
+            android:parentActivityName=".main.MainActivity"></activity>
+
     </application>
 
 </manifest>

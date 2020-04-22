@@ -1,60 +1,61 @@
 package com.raywenderlich.wewatch.details
 
 import android.os.Bundle
-import android.view.Menu
-import android.view.MenuItem
+import android.util.Log
 import android.view.View
-import androidx.appcompat.widget.Toolbar
+import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.res.ResourcesCompat
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import com.raywenderlich.wewatch.BuildConfig
 import com.raywenderlich.wewatch.R
 import com.raywenderlich.wewatch.data.model.details.MovieDetails
-import com.raywenderlich.wewatch.data.net.RetrofitClient
-import com.raywenderlich.wewatch.viewModelFactory
-import com.raywenderlich.wewatch.viewmodel.MovieViewModel
+import com.raywenderlich.wewatch.model.RemoteDataSource
 import com.squareup.picasso.Picasso
-import kotlinx.android.synthetic.main.activity_main.progressBar
 import kotlinx.android.synthetic.main.activity_movie_details.*
-import kotlinx.android.synthetic.main.toolbar_view_custom_layout.*
-import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.toast
 
-class MovieDetailsActivity : BaseActivity() {
+class MovieDetailsActivity : AppCompatActivity(), DetailsContract.DetailsActivityInterface {
 
-    private val toolbar: Toolbar by lazy { toolbar_toolbar_view as Toolbar }
-    private lateinit var viewModel: MovieViewModel
+    private lateinit var presenter: DetailsPresenter
+    var movieId = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_movie_details)
-        setSupportActionBar(toolbar)
-        getSupportActionBar()?.setDisplayHomeAsUpEnabled(true);
-        getSupportActionBar()?.setDisplayShowHomeEnabled(true);
-        val movieId = intent.extras.getInt("id")
-        viewModel = ViewModelProviders.of(this, viewModelFactory).get(MovieViewModel::class.java)
-        showLoading()
-        viewModel.getMovie(movieId).observe(this, Observer { movie ->
-            hideLoading()
-            movie?.let {
-                showMovieDetails(movie)
-            }
-        })
-
+        movieId = intent.extras.getInt("id")
+        setupPresenter()
     }
 
+    override fun onStart() {
+        super.onStart()
+        showLoading()
+        presenter.getDetailsResults(movieId)
+    }
+
+    override fun onStop() {
+        super.onStop()
+        presenter.stop()
+    }
+
+    private fun setupPresenter() {
+        val dataSource = RemoteDataSource()
+        presenter = DetailsPresenter(this, dataSource)
+    }
+
+
     private fun showLoading() {
-        progressBar.visibility = View.VISIBLE
+        progress_bar.visibility = View.VISIBLE
     }
 
     private fun hideLoading() {
-        progressBar.visibility = View.GONE
+        progress_bar.visibility = View.GONE
     }
 
-    private fun showMovieDetails(movieDetails: MovieDetails) {
+    override fun displayResult(movieDetails: MovieDetails) {
+        Log.e("movieDetails", "$movieDetails")
+        hideLoading()
         movieDetails?.let {
             if (it.posterPath != null)
-                Picasso.get().load(RetrofitClient.TMDB_IMAGEURL + it.posterPath).into(movieImageView)
+                Picasso.get().load(BuildConfig.TMDB_IMAGEURL + it.posterPath).into(movieImageView)
             else {
                 movieImageView.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_local_movies_gray, null))
             }
@@ -65,7 +66,12 @@ class MovieDetailsActivity : BaseActivity() {
         }
     }
 
-    override fun getToolbarInstance(): Toolbar? = toolbar
+    override fun displayMessage(message: String) {
+        Toast.makeText(this@MovieDetailsActivity, message, Toast.LENGTH_LONG).show()
+    }
 
-    fun goToAddActivity(view: View) = startActivity<AddMovieActivity>()
+    override fun displayError(string: String) {
+        hideLoading()
+        displayMessage(string)
+    }
 }

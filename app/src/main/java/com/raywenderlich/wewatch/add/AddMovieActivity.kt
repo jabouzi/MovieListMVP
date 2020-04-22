@@ -53,6 +53,7 @@ open class AddMovieActivity : AppCompatActivity(), AddMovieViewInterface {
   private lateinit var releaseDateEditText: EditText
   private lateinit var movieImageView: ImageView
   private lateinit var presenter: AddMoviePresenterInterface
+  private lateinit var movie: Movie
 
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
@@ -85,17 +86,18 @@ open class AddMovieActivity : AppCompatActivity(), AddMovieViewInterface {
       val title = titleEditText.text.toString()
       val releaseDate = releaseDateEditText.text.toString()
       val posterPath = if (movieImageView.tag != null) movieImageView.tag.toString() else ""
-      presenter.addMovie(title = title, releaseDate = releaseDate, posterPath = posterPath)
+      presenter.addMovie(movie)
   }
 
   override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
     super.onActivityResult(requestCode, resultCode, data)
 
     this@AddMovieActivity.runOnUiThread {
-      titleEditText.setText(data?.getStringExtra(SearchActivity.EXTRA_TITLE))
-      releaseDateEditText.setText(data?.getStringExtra(SearchActivity.EXTRA_RELEASE_DATE))
-      movieImageView.tag = data?.getStringExtra(SearchActivity.EXTRA_POSTER_PATH)
-      Picasso.get().load(BuildConfig.TMDB_IMAGEURL + data?.getStringExtra(SearchActivity.EXTRA_POSTER_PATH)).into(movieImageView)
+      movie = data?.getSerializableExtra(SearchActivity.EXTRA_MOVIE) as Movie
+      titleEditText.setText(movie.title)
+      releaseDateEditText.setText(movie.releaseDate)
+      movieImageView.tag = data?.getStringExtra(movie.posterPath)
+      Picasso.get().load(BuildConfig.TMDB_IMAGEURL + movie.posterPath).into(movieImageView)
     }
   }
 

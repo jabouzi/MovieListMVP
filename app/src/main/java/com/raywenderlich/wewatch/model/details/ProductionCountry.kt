@@ -12,4 +12,7 @@ class ProductionCountry {
     @Expose
     var name: String? = null
 
+    override fun toString(): String {
+        return "ProductionCountry(iso31661=$iso31661, name=$name)"
+    }
 }

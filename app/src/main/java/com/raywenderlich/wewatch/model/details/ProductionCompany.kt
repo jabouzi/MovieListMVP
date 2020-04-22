@@ -20,4 +20,7 @@ class ProductionCompany {
     @Expose
     var originCountry: String? = null
 
+    override fun toString(): String {
+        return "ProductionCompany(id=$id, logoPath=$logoPath, name=$name, originCountry=$originCountry)"
+    }
 }

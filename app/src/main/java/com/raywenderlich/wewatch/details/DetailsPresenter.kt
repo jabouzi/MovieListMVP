@@ -1,6 +1,7 @@
 package com.raywenderlich.wewatch.details
 
 import android.util.Log
+import com.raywenderlich.wewatch.data.model.details.MovieDetails
 import com.raywenderlich.wewatch.model.RemoteDataSource
 import com.raywenderlich.wewatch.model.TmdbResponse
 import com.raywenderlich.wewatch.search.SearchContract.*
@@ -11,13 +12,13 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
 
-class DetailsPresenter constructor(private val view: SearchActivityInterface, private val dataSource: RemoteDataSource) : SearchPresenterInterface {
+class DetailsPresenter constructor(private val view: DetailsContract.DetailsActivityInterface, private val dataSource: RemoteDataSource) : DetailsContract.DetailsPresenterInterface {
 
     private val TAG = "SearchPresenter"
     private val compositeDisposable = CompositeDisposable()
 
-    override fun getSearchResults(query: String) {
-        val searchResultsDisposable = searchResultsObservable(query)
+    override fun getDetailsResults(id: Int) {
+        val searchResultsDisposable = getDetailsObservable(id)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribeWith(observer)
@@ -25,13 +26,13 @@ class DetailsPresenter constructor(private val view: SearchActivityInterface, pr
         compositeDisposable.add(searchResultsDisposable)
     }
 
-    val searchResultsObservable: (String) -> Observable<TmdbResponse> = { query -> dataSource.searchResultsObservable(query) }
+    val getDetailsObservable: (Int) -> Observable<MovieDetails> = { id -> dataSource.getDetailsObservable(id) }
 
-    val observer: DisposableObserver<TmdbResponse>
-        get() = object : DisposableObserver<TmdbResponse>() {
+    val observer: DisposableObserver<MovieDetails>
+        get() = object : DisposableObserver<MovieDetails>() {
 
-            override fun onNext(@NonNull tmdbResponse: TmdbResponse) {
-                view.displayResult(tmdbResponse)
+            override fun onNext(@NonNull movieDetails: MovieDetails) {
+                view.displayResult(movieDetails)
             }
 
             override fun onError(@NonNull e: Throwable) {

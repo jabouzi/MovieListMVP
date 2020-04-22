@@ -36,13 +36,19 @@ class AddMoviePresenterTests : BaseTest() {
 
     @Test
     fun testAddMovieNoTitle() {
-        addMoviePresenter.addMovie("", "", "")
+        addMoviePresenter.addMovie(Movie(voteCount=0, id=0, video=false, voteAverage=8.0F, title="",
+                popularity=0F, posterPath="", originalLanguage="", originalTitle="",
+                genreIds=listOf<Int>(0, 0, 0), backdropPath="", adult=false, overview="",
+                releaseDate="", watched=false))
         Mockito.verify(mockActivity).displayError("Movie title cannot be empty")
     }
 
     @Test
     fun testAddMovieWithTitle() {
-        addMoviePresenter.addMovie("The Lion King", "1994-05-07", "bKPtXn9n4M4s8vvZrbw40mYsefB.jpg")
+        addMoviePresenter.addMovie(Movie(voteCount=7868, id=280, video=false, voteAverage=8.0F, title="Title1",
+                popularity=31.613F, posterPath="PosterPath1", originalLanguage="en", originalTitle="Title1",
+                genreIds=listOf<Int>(28, 878, 53), backdropPath="PosterPath1", adult=false, overview="Overview1",
+                releaseDate="ReleaseDate1", watched=false))
         Mockito.verify(mockDataSource).insert(captureArg(movieArgumentCaptor))
         assertEquals("The Lion King", movieArgumentCaptor.value.title)
         Mockito.verify(mockActivity).returnToMain()

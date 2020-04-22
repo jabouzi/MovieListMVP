@@ -1,0 +1,96 @@
+{
+  "adult":false,
+  "backdrop_path":"/umaoScaCsfl9g2dyrXrvMPp59Q7.jpg",
+  "belongs_to_collection":{
+    "id":528,
+    "name":"The Terminator Collection",
+    "poster_path":"/vxiKtcxAJxHhlg2H1X8y7zcM3k6.jpg",
+    "backdrop_path":"/cpmbkwSxZnKO69V82A9a34tvk2E.jpg"
+  },
+  "budget":102000000,
+  "genres":[
+    {
+      "id":28,
+      "name":"Action"
+    },
+    {
+      "id":53,
+      "name":"Thriller"
+    },
+    {
+      "id":878,
+      "name":"Science Fiction"
+    }
+  ],
+  "homepage":"",
+  "id":280,
+  "imdb_id":"tt0103064",
+  "original_language":"en",
+  "original_title":"Terminator 2: Judgment Day",
+  "overview":"Nearly 10 years have passed since Sarah Connor was targeted for termination by a cyborg from the future. Now her son, John, the future leader of the resistance, is the target for a newer, more deadly terminator. Once again, the resistance has managed to send a protector back to attempt to save John and his mother Sarah.",
+  "popularity":31.613,
+  "poster_path":"/5M0j0B18abtBI5gi2RhfjjurTqb.jpg",
+  "production_companies":[
+    {
+      "id":61409,
+      "logo_path":null,
+      "name":"T2 Productions",
+      "origin_country":""
+    },
+    {
+      "id":574,
+      "logo_path":"/iB6GjNVHs5hOqcEYt2rcjBqIjki.png",
+      "name":"Lightstorm Entertainment",
+      "origin_country":"US"
+    },
+    {
+      "id":1280,
+      "logo_path":null,
+      "name":"Pacific Western",
+      "origin_country":"US"
+    },
+    {
+      "id":275,
+      "logo_path":"/2MxNWlN5b3UXt1OfmznsWEQzFwq.png",
+      "name":"Carolco Pictures",
+      "origin_country":"US"
+    },
+    {
+      "id":559,
+      "logo_path":"/eC0bWHVjnjUducyA6YFoEFqnPMC.png",
+      "name":"TriStar Pictures",
+      "origin_country":"US"
+    },
+    {
+      "id":694,
+      "logo_path":"/5LEHONGkZBIoWvp1ygHOF8iyi1M.png",
+      "name":"StudioCanal",
+      "origin_country":"FR"
+    }
+  ],
+  "production_countries":[
+    {
+      "iso_3166_1":"US",
+      "name":"United States of America"
+    }
+  ],
+  "release_date":"1991-07-03",
+  "revenue":520000000,
+  "runtime":137,
+  "spoken_languages":[
+    {
+      "iso_639_1":"en",
+      "name":"English"
+    },
+    {
+      "iso_639_1":"es",
+      "name":"Español"
+    }
+  ],
+  "status":"Released",
+  "tagline":"It's nothing personal.",
+  "title":"Terminator 2: Judgment Day",
+  "video":false,
+  "vote_average":8.0,
+  "vote_count":7869
+}

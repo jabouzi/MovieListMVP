@@ -38,60 +38,66 @@ import android.view.ViewGroup
 import android.widget.CheckBox
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.raywenderlich.wewatch.BuildConfig
 import com.raywenderlich.wewatch.R
+import com.raywenderlich.wewatch.listener.MovieClickListener
 
 import com.raywenderlich.wewatch.model.Movie
 import com.squareup.picasso.Picasso
+import kotlinx.android.synthetic.main.activity_movie_details.view.*
+import kotlinx.android.synthetic.main.item_movie_main.view.*
 
 import java.util.HashSet
 
-class MainAdapter(internal var movieList: List<Movie>, internal var context: Context) : RecyclerView.Adapter<MainAdapter.MoviesHolder>() {
-  // HashMap to keep track of which items were selected for deletion
+class MainAdapter(private val movies: MutableList<Movie>, private val itemClickListener: MovieClickListener)
+  : RecyclerView.Adapter<MainAdapter.MovieHolder>() {
+
   val selectedMovies = HashSet<Movie>()
+  private lateinit var clickListener: MovieClickListener
 
-  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MoviesHolder {
-    val v = LayoutInflater.from(context).inflate(R.layout.item_movie_main, parent, false)
-    return MoviesHolder(v)
+  override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MovieHolder {
+    val view = LayoutInflater.from(parent.context)
+            .inflate(R.layout.item_movie_main, parent, false)
+    return MovieHolder(view)
   }
 
-  @SuppressLint("NewApi")
-  override fun onBindViewHolder(holder: MoviesHolder, position: Int) {
-    holder.titleTextView.text = movieList[position].title
-    holder.releaseDateTextView.text = movieList[position].releaseDate
-    if (movieList[position].posterPath.equals("")) {
-      holder.movieImageView.setImageDrawable(context.getDrawable(R.drawable.ic_local_movies_gray))
-    } else {
-      Picasso.get().load(BuildConfig.TMDB_IMAGEURL + movieList[position].posterPath).into(holder.movieImageView)
-    }
+  override fun getItemCount(): Int = movies.size ?: 0
+
+  override fun onBindViewHolder(holder: MovieHolder, position: Int) {
+    holder.bind(movies[position], itemClickListener)
   }
 
-  override fun getItemCount(): Int {
-    return movieList.size
+  fun setMovies(movieList: List<Movie>) {
+    this.movies.clear()
+    this.movies.addAll(movieList)
+    notifyDataSetChanged()
   }
 
-  inner class MoviesHolder(v: View) : RecyclerView.ViewHolder(v) {
 
-    internal var titleTextView: TextView
-    internal var releaseDateTextView: TextView
-    internal var movieImageView: ImageView
-    internal var checkBox: CheckBox
 
-    init {
-      titleTextView = v.findViewById(R.id.title_textview)
-      releaseDateTextView = v.findViewById(R.id.release_date_textview)
-      movieImageView = v.findViewById(R.id.movie_imageview)
-      checkBox = v.findViewById(R.id.checkbox)
-      checkBox.setOnClickListener {
-        val adapterPosition = adapterPosition
-        if (!selectedMovies.contains(movieList[adapterPosition])) {
-          checkBox.isChecked = true
-          selectedMovies.add(movieList[adapterPosition])
-        } else {
-          checkBox.isChecked = false
-          selectedMovies.add(movieList[adapterPosition])
+  inner class MovieHolder(val view: View) : RecyclerView.ViewHolder(view) {
+
+    fun bind(movie: Movie, itemClickListener: MovieClickListener) = with(view) {
+      title_textview.text = movie.title
+      release_date_textview.text = movie.releaseDate
+      checkbox.isChecked = movie.watched
+      if (movie.posterPath != null)
+        Picasso.get().load(BuildConfig.TMDB_IMAGEURL + movie.posterPath).into(movie_imageview)
+      else {
+        movie_imageview.setImageDrawable(ResourcesCompat.getDrawable(resources, R.drawable.ic_local_movies_gray, null))
+      }
+      checkbox.setOnCheckedChangeListener { checkbox, isChecked ->
+        if (!selectedMovies.contains(movie) && isChecked) {
+          selectedMovies.add(movie)
+        }else{
+          selectedMovies.remove(movie)
         }
+      }
+
+      itemView.setOnClickListener {
+        movie.id?.let { it -> itemClickListener.onItemClick(it) }
       }
     }
 

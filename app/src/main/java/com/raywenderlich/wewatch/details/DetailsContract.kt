@@ -1,15 +1,15 @@
 package com.raywenderlich.wewatch.details
 
-import com.raywenderlich.wewatch.model.TmdbResponse
+import com.raywenderlich.wewatch.data.model.details.MovieDetails
 
 class DetailsContract {
-    interface SearchPresenterInterface {
-        fun getSearchResults(query: String)
+    interface DetailsPresenterInterface {
+        fun getDetailsResults(id: Int)
         fun stop()
     }
 
-    interface SearchActivityInterface {
-        fun displayResult(tmdbResponse: TmdbResponse)
+    interface DetailsActivityInterface {
+        fun displayResult(movieDetails: MovieDetails)
         fun displayMessage(message: String)
         fun displayError(message: String)
     }

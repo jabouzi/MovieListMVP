@@ -48,6 +48,8 @@ import com.raywenderlich.wewatch.model.Movie
 import com.google.android.material.floatingactionbutton.FloatingActionButton
 import com.raywenderlich.wewatch.add.AddMovieActivity
 import com.raywenderlich.wewatch.R
+import com.raywenderlich.wewatch.details.MovieDetailsActivity
+import com.raywenderlich.wewatch.listener.MovieClickListener
 import com.raywenderlich.wewatch.main.MainContract.ViewInterface
 import com.raywenderlich.wewatch.model.LocalDataSource
 import io.reactivex.Observable
@@ -56,11 +58,12 @@ import io.reactivex.annotations.NonNull
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
+import org.jetbrains.anko.startActivity
 
-class MainActivity : AppCompatActivity(), ViewInterface {
+class MainActivity : AppCompatActivity(), ViewInterface, MovieClickListener {
 
   private lateinit var moviesRecyclerView: RecyclerView
-  private var adapter: MainAdapter? = null
+  private val adapter = MainAdapter(mutableListOf(), this)
   private lateinit var fab: FloatingActionButton
   private lateinit var noMoviesLayout: LinearLayout
   private lateinit var presenter: MainPresenter
@@ -70,8 +73,8 @@ class MainActivity : AppCompatActivity(), ViewInterface {
   override fun onCreate(savedInstanceState: Bundle?) {
     super.onCreate(savedInstanceState)
     setContentView(R.layout.activity_main)
-    setupPresenter()
     setupViews()
+    setupPresenter()
   }
 
   override fun onStart() {
@@ -92,6 +95,7 @@ class MainActivity : AppCompatActivity(), ViewInterface {
   private fun setupViews() {
     moviesRecyclerView = findViewById(R.id.movies_recyclerview)
     moviesRecyclerView.layoutManager = LinearLayoutManager(this)
+    moviesRecyclerView.adapter = adapter
     fab = findViewById(R.id.fab)
     noMoviesLayout = findViewById(R.id.no_movies_layout)
     supportActionBar?.title = "Movies to Watch"
@@ -132,10 +136,8 @@ class MainActivity : AppCompatActivity(), ViewInterface {
   }
 
   override fun displayMovies(movieList: List<Movie>) {
-      adapter = MainAdapter(movieList, this@MainActivity)
-      moviesRecyclerView.adapter = adapter
-
-      moviesRecyclerView.visibility = VISIBLE
+      adapter.setMovies(movieList)
+       moviesRecyclerView.visibility = VISIBLE
       noMoviesLayout.visibility = INVISIBLE
   }
 
@@ -149,6 +151,10 @@ class MainActivity : AppCompatActivity(), ViewInterface {
   }
   override fun displayError(message: String) {
     displayMessage(message)
+  }
+
+  override fun onItemClick(movieId: Int) {
+    startActivity<MovieDetailsActivity>("id" to movieId)
   }
 
   companion object {

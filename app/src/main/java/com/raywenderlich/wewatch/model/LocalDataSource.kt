@@ -31,6 +31,7 @@
 package com.raywenderlich.wewatch.model
 
 import android.app.Application
+import android.util.Log
 import io.reactivex.Observable
 import kotlin.concurrent.thread
 
@@ -49,6 +50,7 @@ open class LocalDataSource(application: Application) {
 
   open fun insert(movie: Movie) {
     thread {
+      Log.e("##movie", "$movie")
       movieDao.insert(movie)
     }
   }

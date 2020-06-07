@@ -1,7 +1,7 @@
 package com.raywenderlich.wewatch
 
 import com.raywenderlich.wewatch.model.Movie
-import junit.framework.Assert
+import org.junit.Assert
 import org.junit.Test
 
 class MovieTest {

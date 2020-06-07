@@ -1,6 +1,5 @@
 package com.raywenderlich.wewatch.search
 
-import android.util.Log
 import com.raywenderlich.wewatch.model.RemoteDataSource
 import com.raywenderlich.wewatch.model.TmdbResponse
 import com.raywenderlich.wewatch.search.SearchContract.*
@@ -20,30 +19,19 @@ class SearchPresenter constructor(private val view: SearchActivityInterface, pri
         val searchResultsDisposable = searchResultsObservable(query)
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(observer)
+                .subscribeWith(SearchObserverDelegate(this).observer)
 
         compositeDisposable.add(searchResultsDisposable)
     }
 
     val searchResultsObservable: (String) -> Observable<TmdbResponse> = { query -> dataSource.searchResultsObservable(query) }
 
-    val observer: DisposableObserver<TmdbResponse>
-        get() = object : DisposableObserver<TmdbResponse>() {
-
-            override fun onNext(@NonNull tmdbResponse: TmdbResponse) {
-                view.displayResult(tmdbResponse)
-            }
-
-            override fun onError(@NonNull e: Throwable) {
-                e.printStackTrace()
-                view.displayError("Error fetching Movie Data")
-            }
-
-            override fun onComplete() {}
-        }
-
     override fun stop() {
         compositeDisposable.clear()
+    }
+
+    override fun getView(): SearchActivityInterface {
+        return view
     }
 
 }

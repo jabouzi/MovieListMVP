@@ -6,6 +6,7 @@ class SearchContract {
     interface SearchPresenterInterface {
         fun getSearchResults(query: String)
         fun stop()
+        fun getView(): SearchActivityInterface
     }
 
     interface SearchActivityInterface {

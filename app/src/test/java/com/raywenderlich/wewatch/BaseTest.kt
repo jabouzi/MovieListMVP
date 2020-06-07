@@ -11,15 +11,6 @@ open class BaseTest {
 
     @Throws(IOException::class)
     open fun readJsonFile(filename: String): String? {
-//        val br = BufferedReader(InputStreamReader(FileInputStream(ASSET_BASE_PATH + filename)))
-//        val sb = StringBuilder()
-//        var line: String = br.readLine()
-//        while (line != null) {
-//            sb.append(line)
-//            line = br.readLine()
-//        }
-//        return sb.toString()
-
         val file: InputStream = FileInputStream(ASSET_BASE_PATH + filename)
         val formArray = ByteArray(file.available())
         file.read(formArray)

@@ -9,29 +9,38 @@ import io.reactivex.annotations.NonNull
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.observers.DisposableObserver
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.SupervisorJob
+import kotlinx.coroutines.launch
+import kotlin.coroutines.CoroutineContext
 
-class SearchPresenter constructor(private val view: SearchActivityInterface, private val dataSource: RemoteDataSource) : SearchPresenterInterface {
+class SearchPresenter constructor(private val view: SearchActivityInterface, private val dataSource: RemoteDataSource) :
+        SearchPresenterInterface, CoroutineScope {
 
     private val TAG = "SearchPresenter"
-    private val compositeDisposable = CompositeDisposable()
+    private val parentJob = SupervisorJob()
 
     override fun getSearchResults(query: String) {
-        val searchResultsDisposable = searchResultsObservable(query)
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribeWith(SearchObserverDelegate(this).observer)
-
-        compositeDisposable.add(searchResultsDisposable)
+        launch{
+            val movies = dataSource.searchResults(query)
+            if (movies != null && movies.isNotEmpty()) {
+                view.displayResult(movies)
+            } else  {
+                view.displayError("Error fetching Movie Data")
+            }
+        }
     }
 
-    val searchResultsObservable: (String) -> Observable<TmdbResponse> = { query -> dataSource.searchResultsObservable(query) }
-
     override fun stop() {
-        compositeDisposable.clear()
+        parentJob.cancel()
     }
 
     override fun getView(): SearchActivityInterface {
         return view
     }
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + parentJob
 
 }

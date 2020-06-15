@@ -1,5 +1,6 @@
 package com.raywenderlich.wewatch.search
 
+import com.raywenderlich.wewatch.model.Movie
 import com.raywenderlich.wewatch.model.TmdbResponse
 
 class SearchContract {
@@ -10,7 +11,7 @@ class SearchContract {
     }
 
     interface SearchActivityInterface {
-        fun displayResult(tmdbResponse: TmdbResponse)
+        fun displayResult(movies: List<Movie>)
         fun displayMessage(message: String)
         fun displayError(message: String)
     }

@@ -31,9 +31,12 @@
 package com.raywenderlich.wewatch.network
 
 import com.raywenderlich.wewatch.data.model.details.MovieDetails
+import com.raywenderlich.wewatch.model.Movie
 import com.raywenderlich.wewatch.model.TmdbResponse
 
 import io.reactivex.Observable
+import kotlinx.coroutines.Deferred
+import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path
 import retrofit2.http.Query
@@ -41,8 +44,8 @@ import retrofit2.http.Query
 interface RetrofitInterface {
 
   @GET("search/movie")
-  fun searchMovie(@Query("api_key") api_key: String, @Query("query") q: String): Observable<TmdbResponse>
+  fun searchMovie(@Query("api_key") api_key: String, @Query("query") q: String): Call<TmdbResponse>
 
   @GET("movie/{movie_id}")
-  fun getMovie(@Path("movie_id") movieId: Int, @Query("api_key") api_key: String): Observable<MovieDetails>
+  fun getMovie(@Path("movie_id") movieId: Int, @Query("api_key") api_key: String): Call<MovieDetails>
 }

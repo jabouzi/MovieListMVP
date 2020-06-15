@@ -30,24 +30,32 @@
 
 package com.raywenderlich.wewatch.model
 
+import android.util.Log
 import com.raywenderlich.wewatch.data.model.details.MovieDetails
 import com.raywenderlich.wewatch.network.RetrofitClient
 import io.reactivex.Observable
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
+import kotlinx.coroutines.async
+import org.jetbrains.anko.custom.async
+import org.jetbrains.anko.doAsync
+import retrofit2.await
+import java.io.IOException
 
 open class RemoteDataSource {
 
-  open fun searchResultsObservable(query: String): Observable<TmdbResponse> {
-    return RetrofitClient.moviesApi
-            .searchMovie(RetrofitClient.API_KEY, query)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+  open suspend fun searchResults(query: String): List<Movie> {
+    val resultDeferred =  RetrofitClient.moviesApi.searchMovie(RetrofitClient.API_KEY, query)
+      val response = resultDeferred.await()
+      Log.e("RESULT", "$response")
+      val moviesResponse = response.results ?: emptyList()
+      return moviesResponse
   }
 
-  open fun getDetailsObservable(id: Int): Observable<MovieDetails> {
-    return RetrofitClient.getMovie(id, RetrofitClient.API_KEY)
-            .subscribeOn(Schedulers.io())
-            .observeOn(AndroidSchedulers.mainThread())
+  open suspend fun getDetails(id: Int): MovieDetails {
+    val resultDeferred =  RetrofitClient.moviesApi.getMovie(id, RetrofitClient.API_KEY)
+    val response = resultDeferred.await()
+    val moviesResponse = response ?: MovieDetails()
+    return moviesResponse
   }
 }

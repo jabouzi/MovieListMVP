@@ -44,6 +44,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.raywenderlich.wewatch.R
+import com.raywenderlich.wewatch.model.Movie
 import com.raywenderlich.wewatch.model.RemoteDataSource
 import com.raywenderlich.wewatch.model.TmdbResponse
 import com.raywenderlich.wewatch.search.SearchContract.*
@@ -98,14 +99,14 @@ class SearchActivity : AppCompatActivity(), SearchActivityInterface {
     searchResultsRecyclerView.layoutManager = LinearLayoutManager(this)
   }
 
-  override fun displayResult(tmdbResponse: TmdbResponse) {
+  override fun displayResult(movies: List<Movie>) {
     progressBar.visibility = INVISIBLE
 
-    if (tmdbResponse.totalResults == null || tmdbResponse.totalResults == 0) {
+    if (movies == null ||movies.count() == 0) {
       searchResultsRecyclerView.visibility = INVISIBLE
       noMoviesTextView.visibility = VISIBLE
     } else {
-      adapter = SearchAdapter(tmdbResponse.results
+      adapter = SearchAdapter(movies
               ?: arrayListOf(), this@SearchActivity, itemListener)
       searchResultsRecyclerView.adapter = adapter
 

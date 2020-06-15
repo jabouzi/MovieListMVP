@@ -6,6 +6,10 @@ import com.raywenderlich.wewatch.RxImmediateSchedulerRule
 import com.raywenderlich.wewatch.data.model.details.MovieDetails
 import com.raywenderlich.wewatch.model.RemoteDataSource
 import io.reactivex.Observable
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -32,20 +36,21 @@ class DetailsPresenterTests : BaseTest(){
 
     @Before
     fun setUp() {
+        Dispatchers.setMain(Dispatchers.Unconfined)
         detailsPresenter = DetailsPresenter(view = mockActivity, dataSource = mockDataSource)
     }
 
     @Test
-    fun testSearchMovie() {
+    fun testSearchMovie() = runBlockingTest {
         val myDummyResponse = dummyResponse
-        Mockito.doReturn(Observable.just(myDummyResponse)).`when`(mockDataSource).getDetailsObservable(ArgumentMatchers.anyInt())
+        Mockito.doReturn(myDummyResponse).`when`(mockDataSource).getDetails(ArgumentMatchers.anyInt())
         detailsPresenter.getDetailsResults(10)
         Mockito.verify(mockActivity).displayResult(myDummyResponse)
     }
 
     @Test
-    fun testSearchMovieError() {
-        Mockito.doReturn(Observable.error<Throwable>(Throwable("Something went wrong"))).`when`(mockDataSource).getDetailsObservable(ArgumentMatchers.anyInt())
+    fun testSearchMovieError()  = runBlocking {
+        Mockito.doReturn(null).`when`(mockDataSource).getDetails(ArgumentMatchers.anyInt())
         detailsPresenter.getDetailsResults(10)
         Mockito.verify(mockActivity).displayError("Error fetching Movie Data")
     }
